@@ -26,6 +26,7 @@ use Updater\Package\Package;
 use Updater\Service\PackageService;
 use Updater\Service\UpdateService;
 use Updater\Tools\Json\JsonManager;
+use Updater\Tools\Composer\ComposerManager;
 
 class UpdateCommand extends Command
 {
@@ -59,6 +60,7 @@ EOT
         $rollback = $input->getOption('rollback');
         $updater = new Updater();
         $jsonManager = new JsonManager();
+        $composerManager = new ComposerManager();
         $updater->setPackageService(new PackageService())
             ->setTempDir(realpath($tempDir))
             ->setWorkingDir(realpath($targetDir));
@@ -73,6 +75,7 @@ EOT
         if ($rollback) {
             $updateService->setPackage($package);
             $updateService->rollbackUpdate();
+            //$composerManager->runComposer($package->getComposerAction(), $updater->getWorkingDir(), $output);
 
             $output->writeln('<info>Changes have been rollbacked.</info>');
 
@@ -80,6 +83,9 @@ EOT
         }
 
         $isUpdated = $updateService->doUpdate($package);
+        //TODO: add check if composer.phar exist then perform composer actions
+        //$composerManager->selfUpdate($updater->getWorkingDir(), $output);
+        //$composerManager->runComposer($package->getComposerAction(), $updater->getWorkingDir(), $output);
 
         if ($isUpdated) {
             $output->writeln('<info>Your application has been successfully updated.</info>');

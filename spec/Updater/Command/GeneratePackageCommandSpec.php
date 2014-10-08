@@ -71,7 +71,7 @@ class GeneratePackageCommandSpec extends ObjectBehavior
         $output = new NullOutput();
 
         $this
-        ->shouldThrow('\Exception')
-        ->duringExecute($input, $output);
+            ->shouldThrow('\Exception')
+            ->duringExecute($input, $output);
     }
 }
